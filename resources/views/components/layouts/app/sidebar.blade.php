@@ -34,12 +34,6 @@
                                 :active="request()->routeIs('bills.generate*')">
                                 Auto Generate Bill</x-layouts.sidebar-link>
 
-
-                            <a class="ml-3 text-sm text-gray-500" href="{{ route('bills.generate') }}">
-                                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                                </button>
-                            </a>
-
                             <x-layouts.sidebar-link href="{{ route('payments.index') }}" icon='fas-dollar-sign'
                                 :active="request()->routeIs('payments*')">
                                 Payments</x-layouts.sidebar-link>
