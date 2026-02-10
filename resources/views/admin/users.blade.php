@@ -1,5 +1,5 @@
 <x-layouts.app>
-    <div class="min-h-screen bg-[#0b0f1a] py-4 font-sans text-slate-300">
+    <div class="bg-[#0b0f1a] py-4 font-sans text-slate-300">
         <!-- SUCCESS MESSAGE -->
         <div class="mx-auto max-w-7xl py-2">
             <x-status-message />

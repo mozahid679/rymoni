@@ -277,17 +277,27 @@
                             @foreach ($meterReadings as $reading)
                                 <tr class="transition-colors hover:bg-gray-50/80 dark:hover:bg-gray-700/50">
                                     <td class="px-6 py-4">
-                                        <div class="font-bold dark:text-white">{{ $reading->meter->unit->unit_no }}
-                                        </div>
-                                        <div class="text-xs text-gray-400">#{{ $reading->meter->meter_no }}</div>
+                                        {{-- Using optional() or null-safe operator to prevent crashes if a meter is missing --}}
+                                        <div class="font-bold dark:text-white">
+                                            {{ $reading->meter?->unit?->unit_no ?? 'N/A' }}</div>
+                                        <div class="text-xs text-gray-400">
+                                            #{{ $reading->meter?->meter_no ?? 'No Meter' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 text-center text-gray-400">{{ $reading->previous_reading }}
+
+                                    {{-- Make sure these match your database columns (usually current_unit or current_reading) --}}
+                                    <td class="px-6 py-4 text-center text-gray-400">
+                                        {{ number_format($reading->previous_unit, 1) }}
                                     </td>
-                                    <td class="px-6 py-4 text-center font-medium">{{ $reading->current_reading }}</td>
+
+                                    <td class="px-6 py-4 text-center font-medium dark:text-gray-200">
+                                        {{ number_format($reading->current_unit, 1) }}
+                                    </td>
+
                                     <td class="px-6 py-4 text-right">
                                         <span
-                                            class="rounded-md bg-indigo-600 px-2 py-1 font-mono font-bold text-white">
-                                            {{ $reading->unit_used }}
+                                            class="rounded-md bg-indigo-100 px-2 py-1 font-mono font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                                            {{-- Use the accessor you created earlier! --}}
+                                            {{ number_format($reading->total_units, 1) }}
                                         </span>
                                     </td>
                                 </tr>
