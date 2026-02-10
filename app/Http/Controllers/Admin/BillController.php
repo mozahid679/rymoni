@@ -8,40 +8,42 @@ use App\Models\Tenancy;
 use App\Services\ElectricityCalculator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use Artisan;
 
 class BillController extends Controller
 {
-   public function index()
+   public function index(Request $request)
    {
+      $query = Bill::with(['tenant'])->latest();
+
+      // Check if user filtered by month (Format: YYYY-MM)
+      if ($request->filled('filter_month')) {
+         $query->where('month', $request->filter_month);
+         // Note: If your DB stores full dates like 2026-01-15, use:
+         // $query->where('month', 'like', $request->filter_month . '%');
+      }
+
       return view('admin.bills', [
-         'bills' => Bill::with(['tenant', 'unit'])->latest()->get(),
+         // Change get() to paginate()
+         'bills'     => $query->paginate(10)->withQueryString(),
          'tenancies' => Tenancy::with(['tenant', 'unit.property'])
             ->whereNull('end_date')
             ->get(),
-         'editBill' => null,
+         'editBill'  => null,
       ]);
    }
+
+   //    return view('admin.bills', [
+   //       'bills' => Bill::with(['tenant', 'unit'])->latest()->get(),
+   //       'tenancies' => Tenancy::with(['tenant', 'unit.property'])
+   //          ->whereNull('end_date')
+   //          ->get(),
+   //       'editBill' => null,
+   //    ]);
+   // }
    public function showGenerateForm()
    {
       return view('admin.bills-generate');
-   }
-
-   public function runGenerate(Request $request)
-   {
-      $month = $request->input('month', now()->format('Y-m'));
-
-      // Run the artisan command programmatically
-      Artisan::call('bills:generate', [
-         'month' => $month
-      ]);
-
-      $output = Artisan::output();
-
-      return redirect()->route('bills.index')
-         ->with('success', "Bills for {$month} generated successfully.")->with('output', $output);
    }
 
    public function store(Request $request)
@@ -55,17 +57,6 @@ class BillController extends Controller
          'issue_date' => 'required|date',
          'due_date' => 'required|date|after_or_equal:issue_date',
       ]);
-
-      // $electricityAmount = 0;
-
-      // if ($unit->type === 'shop' && $unit->has_electricity) {
-      //    $calculator = new ElectricityCalculator();
-      //    $result = $calculator->calculateForMonth($request->month);
-
-      //    $electricityAmount = $result['per_shop_cost'] ?? 0;
-      // }
-
-      // $total = $rent + $electricityAmount;
 
       $tenancy = Tenancy::with(['tenant', 'unit'])->findOrFail($data['tenancy_id']);
 

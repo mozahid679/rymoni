@@ -13,8 +13,12 @@
                             <x-layouts.sidebar-link href="{{ route('properties.index') }}" icon='fas-building'
                                 :active="request()->routeIs('properties*')">Properties</x-layouts.sidebar-link>
 
-                            <x-layouts.sidebar-link href="{{ route('units.index') }}" icon='fas-bolt'
+                            <x-layouts.sidebar-link href="{{ route('units.index') }}" icon='fas-shop'
                                 :active="request()->routeIs('units*')">Units</x-layouts.sidebar-link>
+
+                            <x-layouts.sidebar-link href="{{ route('meters.index') }}" icon='fas-bolt'
+                                :active="request()->routeIs('meters*')">
+                                Meter</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-link href="{{ route('meter-readings.index') }}" icon='fas-calculator'
                                 :active="request()->routeIs('meter-readings*')">
@@ -30,13 +34,17 @@
                                 :active="request()->routeIs('bills.index*')">
                                 Bills</x-layouts.sidebar-link>
 
-                            <x-layouts.sidebar-link href="{{ route('bills.generate') }}" icon='fas-money-bill'
+                            <x-layouts.sidebar-link href="{{ route('bills.generate') }}" icon='fas-file-invoice-dollar'
                                 :active="request()->routeIs('bills.generate*')">
                                 Auto Generate Bill</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-link href="{{ route('payments.index') }}" icon='fas-dollar-sign'
                                 :active="request()->routeIs('payments*')">
                                 Payments</x-layouts.sidebar-link>
+
+                            <x-layouts.sidebar-link href="{{ route('reports.index') }}" icon='fas-chart-area'
+                                :active="request()->routeIs('reports*')">
+                                Reports</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-link href="{{ route('users.index') }}" icon='fas-user-gear'
                                 :active="request()->routeIs('users*')">

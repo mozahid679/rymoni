@@ -11,6 +11,10 @@
                 <label class="mb-1 block font-medium">Month</label>
                 <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="month" type="month"
                     value="{{ now()->format('Y-m') }}" required>
+
+                @error('month')
+                    <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
             <button class="rounded bg-indigo-600 px-6 py-2 text-white" type="submit">Generate Bills</button>

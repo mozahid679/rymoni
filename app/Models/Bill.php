@@ -45,6 +45,13 @@ class Bill extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+    public function tenancy()
+    {
+        return Tenancy::where('tenant_id', $this->tenant_id)
+            ->where('unit_id', $this->unit_id)
+            ->latest('start_date')
+            ->first();
+    }
 
     // Future: one bill can have multiple payments (cash/bank/bkash/nagad)
     public function payments()

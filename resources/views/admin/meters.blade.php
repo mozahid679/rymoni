@@ -20,16 +20,19 @@
 
                 <!-- Property -->
                 <div>
-                    <label class="mb-1 block text-sm">Property</label>
-                    <select class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="property_id">
-                        <option value="">Select Property</option>
-                        @foreach ($properties as $property)
-                            <option value="{{ $property->id }}" @selected(old('property_id', $editMeter->property_id ?? '') == $property->id)>
-                                {{ $property->name }}
-                            </option>
+                    <label class="mb-1 block text-sm font-medium">Select Unit / Shop (Electricity Only)</label>
+                    <select class="w-full rounded border px-3 py-2 text-white dark:bg-gray-700" name="unit_id">
+                        <option value="">-- Choose a Unit --</option>
+                        @foreach ($units as $unit)
+                            {{-- Only show the option if has_electricity is true --}}
+                            @if ($unit->has_electricity)
+                                <option value="{{ $unit->id }}" @selected(old('unit_id', $editMeter->unit_id ?? '') == $unit->id)>
+                                    {{ $unit->unit_no }} ({{ ucfirst($unit->type) }})
+                                </option>
+                            @endif
                         @endforeach
                     </select>
-                    @error('property_id')
+                    @error('unit_id')
                         <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
@@ -73,7 +76,7 @@
                     <tr
                         class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500 dark:bg-gray-900/50 dark:text-gray-400">
                         <th class="px-6 py-3 text-left font-semibold">ID</th>
-                        <th class="px-6 py-3 text-left font-semibold">Property</th>
+                        <th class="px-6 py-3 text-left font-semibold">Unit ID</th>
                         <th class="px-6 py-3 text-left font-semibold">Meter No</th>
                         <th class="px-6 py-3 text-right font-semibold">Action</th>
                     </tr>
@@ -84,7 +87,7 @@
                             <td class="px-6 py-4 font-mono text-indigo-500 dark:text-indigo-400">#{{ $meter->id }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                {{ $meter->property->name }}</td>
+                                {{ $meter->unit_id }}</td>
                             <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $meter->meter_no }}</td>
                             <td class="px-6 py-4 text-right">
                                 <a class="inline-flex items-center font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"

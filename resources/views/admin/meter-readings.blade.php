@@ -1,10 +1,11 @@
 <x-layouts.app>
 
-    <!-- ADD / EDIT FORM -->
+    <!-- STATUS -->
     <div class="mx-auto max-w-7xl py-2">
         <x-status-message />
     </div>
 
+    <!-- ADD / EDIT FORM -->
     <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
         <h2 class="mb-4 text-lg font-semibold">
             {{ $editReading ? 'Edit Meter Reading' : 'Add Meter Reading' }}
@@ -12,70 +13,97 @@
 
         <form method="POST"
             action="{{ $editReading ? route('meter-readings.update', $editReading) : route('meter-readings.store') }}">
+
             @csrf
             @if ($editReading)
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div x-data="{
+                previous: {{ old('previous_unit', $editReading->previous_unit ?? 0) }},
+                current: {{ old('current_unit', $editReading->current_unit ?? 0) }},
+                price: {{ old('per_unit_price', $editReading->per_unit_price ?? 14) }},
+            
+                // This is the logic for your calculator
+                get total() {
+                    let diff = this.current - this.previous;
+                    return diff > 0 ? (diff * this.price).toFixed(2) : '0.00';
+                }
+            }">
 
-                <!-- Meter -->
-                <div>
-                    <label class="mb-1 block text-sm">Meter</label>
-                    <select class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="meter_id">
-                        <option value="">Select Meter</option>
-                        @foreach ($meters as $meter)
-                            <option value="{{ $meter->id }}" @selected(old('meter_id', $editReading->meter_id ?? '') == $meter->id)>
-                                {{ $meter->meter_no }} ({{ $meter->property->name }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('meter_id')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {{-- Shop Selection --}}
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Shop</label>
 
-                <!-- Month -->
-                <div>
-                    <label class="mb-1 block text-sm">Month</label>
-                    <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="month" type="month"
-                        value="{{ old('month', $editReading->month ?? '') }}">
-                    @error('month')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                        <select class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="meter_id"
+                            x-on:change="previous = $event.target.selectedOptions[0].dataset.last || 0">
+                            @if ($meters->isEmpty())
+                                <option value="" disabled>No shops found in database!</option>
+                            @else
+                                @foreach ($meters as $meter)
+                                    <option data-last="{{ $meter->lastReading->current_unit ?? 0 }}"
+                                        value="{{ $meter->id }}" @selected(old('meter_id', $editReading->meter_id ?? '') == $meter->id)>
+                                        {{ $meter->unit->unit_no ?? 'N/A' }} ({{ $meter->meter_no }})
+                                    </option>
+                                @endforeach
+                            @endif
 
-                <!-- Per Unit Price -->
-                <div>
-                    <label class="mb-1 block text-sm">Per Unit Price</label>
-                    <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="per_unit_price" type="number"
-                        value="{{ old('per_unit_price', $editReading->per_unit_price ?? '') }}" step="0.01">
-                    @error('per_unit_price')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                        </select>
+                        @error('meter_id')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-            </div>
+                    {{-- Month --}}
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Month</label>
+                        <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="month" type="month"
+                            value="{{ old('month', $editReading->month ?? '') }}">
+                        @error('month')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-                <!-- Previous Unit -->
-                <div>
-                    <label class="mb-1 block text-sm">Previous Unit</label>
-                    <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="previous_unit" type="number"
-                        value="{{ old('previous_unit', $editReading->previous_unit ?? '') }}">
-                    @error('previous_unit')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                    {{-- Per Unit Price --}}
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Per Unit Price</label>
+                        <div x-data="{ price: {{ old('per_unit_price', $editReading->per_unit_price ?? 14) }} }">
+                            <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="per_unit_price"
+                                type="number" x-model="price" step="0.01">
+                        </div>
+                        @error('per_unit_price')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <!-- Current Unit -->
-                <div>
-                    <label class="mb-1 block text-sm">Current Unit</label>
-                    <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="current_unit" type="number"
-                        value="{{ old('current_unit', $editReading->current_unit ?? '') }}">
-                    @error('current_unit')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
+                    {{-- Previous Unit --}}
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Previous Unit</label>
+                        <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="previous_unit"
+                            type="number" x-model="previous">
+                        @error('previous_unit')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Current Unit --}}
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Current Unit</label>
+                        <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="current_unit"
+                            type="number" x-model="current">
+                        @error('current_unit')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Read-only Total Display --}}
+                    <div class="flex flex-col justify-end">
+                        <div class="rounded border border-indigo-500/20 bg-indigo-500/10 p-2">
+                            <p class="text-xs font-bold uppercase tracking-wider text-indigo-400">Estimated Total</p>
+                            <p class="font-mono text-xl text-white">$<span x-text="total"></span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -85,78 +113,47 @@
                 </button>
 
                 @if ($editReading)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('meter-readings.index') }}">
-                        Cancel
-                    </a>
+                    <a class="ml-3 text-sm text-gray-500" href="{{ route('meter-readings.index') }}">Cancel</a>
                 @endif
             </div>
         </form>
     </div>
 
     <!-- LIST -->
-    <div
-        class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <div class="border-b border-gray-100 px-6 py-4 dark:border-gray-700">
-            <h2 class="text-lg font-bold text-gray-800 dark:text-white">Meter Readings</h2>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr
-                        class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500 dark:bg-gray-900/50 dark:text-gray-400">
-                        <th class="px-6 py-3 text-left font-semibold">ID</th>
-                        <th class="px-6 py-3 text-left font-semibold">Property</th>
-                        <th class="px-6 py-3 text-left font-semibold">Meter No</th>
-                        <th class="px-6 py-3 text-left font-semibold">Month</th>
-                        <th class="px-6 py-3 text-left font-semibold">Prev Unit</th>
-                        <th class="px-6 py-3 text-left font-semibold">Current Unit</th>
-                        <th class="px-6 py-3 text-left font-semibold">Per Unit</th>
-                        <th class="px-6 py-3 text-right font-semibold">Action</th>
+    <div class="mt-6 overflow-hidden rounded-xl border bg-white shadow dark:bg-gray-800">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 dark:bg-gray-900/50">
+                <tr>
+                    <th class="px-4 py-3 text-left">#</th>
+                    <th class="px-4 py-3 text-left">Shop No</th>
+                    <th class="px-4 py-3 text-left">Month</th>
+                    <th class="px-4 py-3 text-left">Used Unit</th>
+                    <th class="px-4 py-3 text-left">Total</th>
+                    <th class="px-4 py-3 text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y dark:divide-gray-700">
+                @foreach ($readings as $reading)
+                    <tr>
+                        <td class="px-4 py-3">
+                            {{ $reading->meter->unit->id }}
+                        </td>
+                        <td class="px-4 py-3">
+                            {{ $reading->meter->unit->unit_no }}
+                        </td>
+                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($reading->month)->format('F, Y') }}</td>
+                        <td class="px-4 py-3">{{ $reading->used_unit }}</td>
+                        <td class="px-4 py-3 font-semibold">
+                            ৳{{ number_format($reading->total_amount, 2) }}
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <a class="font-bold text-indigo-600"
+                                href="{{ route('meter-readings.edit', $reading) }}">Edit</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                    @forelse($readings as $r)
-                        <tr class="transition-colors duration-200 hover:bg-indigo-50/50 dark:hover:bg-gray-700/50">
-                            <td class="px-6 py-4 font-mono text-indigo-500 dark:text-indigo-400">#{{ $r->id }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                {{ $r->meter->property->name }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $r->meter->meter_no }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $r->month }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $r->previous_unit }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $r->current_unit }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
-                                {{ number_format($r->per_unit_price, 2) }}</td>
-                            <td class="px-6 py-4 text-right">
-                                <a class="inline-flex items-center font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-                                    href="{{ route('meter-readings.edit', $r) }}">
-                                    <span>Edit</span>
-                                    <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td class="py-12 text-center text-gray-500 dark:text-gray-400" colspan="8">
-                                <div class="flex flex-col items-center">
-                                    <svg class="mb-2 h-8 w-8 text-gray-300" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <p>No meter readings found.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
 </x-layouts.app>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -15,6 +16,7 @@ class MeterReading extends Model
         'previous_unit',
         'current_unit',
         'per_unit_price',
+        'total_amount'
     ];
 
     protected $casts = [
@@ -34,12 +36,12 @@ class MeterReading extends Model
         return $this->belongsTo(Meter::class);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Calculated Attributes
-    |--------------------------------------------------------------------------
-    | These are helpers, NOT stored in DB
-    */
+    protected function usedUnit(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->current_unit - $this->previous_unit,
+        );
+    }
 
     public function getTotalUnitsAttribute(): int
     {

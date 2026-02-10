@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MeterController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\MeterReadingController;
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -30,7 +31,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         'meter-readings' => MeterReadingController::class,
         'bills' => BillController::class,
         'payments' => PaymentController::class,
-        'users' => UsersController::class
+        'users' => UsersController::class,
+        'reports' => ReportController::class
     ], ['only' => ['index', 'store', 'edit', 'update', 'destroy']]);
 });
 

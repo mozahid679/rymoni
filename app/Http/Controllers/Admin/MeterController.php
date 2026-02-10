@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Meter;
 use App\Models\Property;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 
 class MeterController extends Controller
@@ -12,16 +13,18 @@ class MeterController extends Controller
     public function index()
     {
         return view('admin.meters', [
-            'meters'     => Meter::with('property')->latest()->get(),
-            'properties' => Property::orderBy('name')->get(),
-            'editMeter'  => null,
+            'meters'    => Meter::with('unit')->latest()->get(),
+            'units'     => Unit::where('has_electricity', true)
+                ->orderBy('unit_no')
+                ->get(),
+            'editMeter' => null,
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'property_id' => 'required|exists:properties,id',
+            'unit_id'  => 'required|exists:units,id',
             'meter_no'    => 'required|string|unique:meters,meter_no',
         ]);
 
@@ -34,9 +37,9 @@ class MeterController extends Controller
     public function edit(Meter $meter)
     {
         return view('admin.meters', [
-            'meters'     => Meter::with('property')->latest()->get(),
-            'properties' => Property::orderBy('name')->get(),
-            'editMeter'  => $meter,
+            'meters'    => Meter::with('unit.property')->latest()->get(),
+            'units'     => Unit::with('property')->orderBy('unit_no')->get(),
+            'editMeter' => $meter,
         ]);
     }
 

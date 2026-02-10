@@ -59,6 +59,15 @@ class Unit extends Model
     {
         return $this->type === 'shop';
     }
+    public function scopeShops($query)
+    {
+        return $query->where('type', 'shop');
+    }
+
+    public function meter()
+    {
+        return $this->hasOne(Meter::class);
+    }
 
     public function isRoom(): bool
     {

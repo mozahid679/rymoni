@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('meters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('property_id')->constrained();
-            $table->string('meter_no');
+            $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
+            $table->string('meter_no')->unique();
             $table->timestamps();
         });
     }
