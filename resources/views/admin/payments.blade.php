@@ -14,7 +14,7 @@
 
 
             <div x-data="{ selectedAmount: '' }">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-6">
                     <div>
                         <label class="mb-1 block text-sm">Bill</label>
                         <select class="w-full rounded border px-3 py-2 text-white dark:bg-gray-700" name="bill_id"
@@ -64,14 +64,13 @@
                         <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="received_by"
                             type="text">
                     </div>
+
+                    <div class="mt-5">
+                        <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                            Save Payment
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    Save Payment
-                </button>
             </div>
         </form>
     </div>

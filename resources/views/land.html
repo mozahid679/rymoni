@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Raymoni Property Management</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        @vite('resources/css/app.css')
+    </head>
+    <body class="bg-gray-50 text-gray-800">
+        <!-- ================= NAVBAR ================= -->
+        <nav class="bg-white shadow-sm">
+            <div
+                class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
+            >
+                <h1 class="text-2xl font-bold text-indigo-600">Raymoni PMS</h1>
+                <div class="space-x-6 text-sm font-medium">
+                    <a href="#features" class="hover:text-indigo-600"
+                        >Features</a
+                    >
+                    <a href="#about" class="hover:text-indigo-600">About</a>
+                    <a
+                        href="/login"
+                        class="rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+                    >
+                        Login
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ================= HERO ================= -->
+        <section class="bg-white">
+            <div class="mx-auto max-w-7xl px-6 py-20 text-center">
+                <h2 class="text-4xl leading-tight font-bold md:text-5xl">
+                    Smart Property & Tenancy Management System
+                </h2>
+                <p class="mx-auto mt-6 max-w-3xl text-lg text-gray-600">
+                    Manage properties, units, tenants, billing and bookings —
+                    all in one powerful Laravel-based dashboard. Prevent double
+                    booking, track active tenants, and simplify real estate
+                    management.
+                </p>
+
+                <div class="mt-8">
+                    <a
+                        href="/login"
+                        class="rounded-lg bg-indigo-600 px-8 py-3 text-lg text-white transition hover:bg-indigo-700"
+                    >
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FEATURES ================= -->
+        <section id="features" class="bg-gray-100 py-20">
+            <div class="mx-auto max-w-7xl px-6">
+                <h3 class="mb-16 text-center text-3xl font-bold">
+                    Powerful Features
+                </h3>
+
+                <div class="grid gap-10 md:grid-cols-3">
+                    <!-- Property Management -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Property Management
+                        </h4>
+                        <p class="text-gray-600">
+                            Add and manage multiple properties with structured
+                            unit organization. Easily monitor property
+                            performance and occupancy.
+                        </p>
+                    </div>
+
+                    <!-- Smart Unit Booking -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Smart Unit Booking
+                        </h4>
+                        <p class="text-gray-600">
+                            Automatically filters booked units. Prevents double
+                            booking. Ensures a single unit cannot be assigned to
+                            multiple tenants at the same time.
+                        </p>
+                    </div>
+
+                    <!-- Tenant Management -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Tenant Management
+                        </h4>
+                        <p class="text-gray-600">
+                            Maintain complete tenant profiles, tenancy history,
+                            and active contract tracking.
+                        </p>
+                    </div>
+
+                    <!-- Billing & Payments -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Billing System
+                        </h4>
+                        <p class="text-gray-600">
+                            Generate rent bills, track payment status, and
+                            manage financial records efficiently.
+                        </p>
+                    </div>
+
+                    <!-- Real-time Filtering -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Dynamic Filtering
+                        </h4>
+                        <p class="text-gray-600">
+                            Real-time property & unit selection using Alpine.js.
+                            Seamless dropdown filtering with intelligent
+                            availability logic.
+                        </p>
+                    </div>
+
+                    <!-- Dashboard & Reports -->
+                    <div class="rounded-lg bg-white p-8 shadow-sm">
+                        <h4 class="mb-4 text-xl font-semibold">
+                            Analytics Dashboard
+                        </h4>
+                        <p class="text-gray-600">
+                            Track active tenancies, occupancy rates, and revenue
+                            insights from a centralized dashboard.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABOUT ================= -->
+        <section id="about" class="bg-white py-20">
+            <div class="mx-auto max-w-5xl px-6 text-center">
+                <h3 class="mb-6 text-3xl font-bold">
+                    Built for Modern Property Management
+                </h3>
+                <p class="text-lg leading-relaxed text-gray-600">
+                    Raymoni Property Management System is designed to simplify
+                    complex rental operations. Built with Laravel, MySQL,
+                    TailwindCSS, and Alpine.js, it delivers speed, security, and
+                    intelligent tenancy control. Whether managing a single
+                    building or multiple properties, this system ensures
+                    structured, secure, and scalable management.
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= CTA ================= -->
+        <section class="bg-indigo-600 py-16">
+            <div class="mx-auto max-w-5xl px-6 text-center text-white">
+                <h3 class="text-3xl font-bold">
+                    Ready to Simplify Your Property Management?
+                </h3>
+                <p class="mt-4 text-indigo-100">
+                    Start managing properties smarter and eliminate manual
+                    errors.
+                </p>
+                <div class="mt-8">
+                    <a
+                        href="/login"
+                        class="rounded-lg bg-white px-8 py-3 font-semibold text-indigo-600 hover:bg-gray-100"
+                    >
+                        Access Dashboard
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="bg-gray-900 py-10 text-gray-400">
+            <div class="mx-auto max-w-7xl px-6 text-center text-sm">
+                © {{ date('Y') }} Raymoni Property Management System. All
+                rights reserved.
+            </div>
+        </footer>
+    </body>
+</html>

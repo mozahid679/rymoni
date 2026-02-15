@@ -16,9 +16,9 @@
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-8">
                 @unless ($editBill)
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="mb-1 block text-sm">Tenancy</label>
                         <select class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="tenancy_id" required>
                             <option value="">Select tenancy</option>
@@ -94,18 +94,18 @@
                         </select>
                     </div>
                 @endif
-            </div>
 
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    {{ $editBill ? 'Update' : 'Generate Bill' }}
-                </button>
+                <div class="mt-4 flex justify-start">
+                    <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                        {{ $editBill ? 'Update' : 'Generate Bill' }}
+                    </button>
 
-                @if ($editBill)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('bills.index') }}">
-                        Cancel
-                    </a>
-                @endif
+                    @if ($editBill)
+                        <a class="ml-3 text-sm text-gray-500" href="{{ route('bills.index') }}">
+                            Cancel
+                        </a>
+                    @endif
+                </div>
             </div>
 
             @if ($errors->any())
@@ -214,7 +214,7 @@
 
             <div class="border-t bg-gray-50 px-6 py-4 dark:bg-gray-900/50">
                 {{ $bills->links() }}
-            </div </div>
+            </div>
         </div>
 
 </x-layouts.app>

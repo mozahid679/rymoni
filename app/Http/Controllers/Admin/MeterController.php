@@ -15,6 +15,7 @@ class MeterController extends Controller
         return view('admin.meters', [
             'meters'    => Meter::with('unit')->latest()->get(),
             'units'     => Unit::where('has_electricity', true)
+                ->whereDoesntHave('meter')
                 ->orderBy('unit_no')
                 ->get(),
             'editMeter' => null,
@@ -24,7 +25,7 @@ class MeterController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'unit_id'  => 'required|exists:units,id',
+            'unit_id'  => 'required|unique:meters,unit_id|exists:units,id',
             'meter_no'    => 'required|string|unique:meters,meter_no',
         ]);
 

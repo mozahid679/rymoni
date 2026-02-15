@@ -19,7 +19,7 @@
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <div>
                     <label class="mb-1 block text-sm">Property Name</label>
                     <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="name" type="text"
@@ -37,18 +37,18 @@
                         <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    {{ $editProperty ? 'Update' : 'Save' }}
-                </button>
+                <div class="mt-4 self-center text-start">
+                    <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                        {{ $editProperty ? 'Update Property' : 'Save Property' }}
+                    </button>
 
-                @if ($editProperty)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('properties.index') }}">
-                        Cancel
-                    </a>
-                @endif
+                    @if ($editProperty)
+                        <a class="ml-3 text-sm text-gray-500" href="{{ route('properties.index') }}">
+                            Cancel
+                        </a>
+                    @endif
+                </div>
             </div>
         </form>
     </div>

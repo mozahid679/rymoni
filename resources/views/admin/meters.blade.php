@@ -16,49 +16,66 @@
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 
                 <!-- Property -->
-                <div>
-                    <label class="mb-1 block text-sm font-medium">Select Unit / Shop (Electricity Only)</label>
-                    <select class="w-full rounded border px-3 py-2 text-white dark:bg-gray-700" name="unit_id">
-                        <option value="">-- Choose a Unit --</option>
-                        @foreach ($units as $unit)
-                            {{-- Only show the option if has_electricity is true --}}
-                            @if ($unit->has_electricity)
-                                <option value="{{ $unit->id }}" @selected(old('unit_id', $editMeter->unit_id ?? '') == $unit->id)>
-                                    {{ $unit->unit_no }} ({{ ucfirst($unit->type) }})
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
-                    @error('unit_id')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
+                <div class="contents" x-data="{
+                    meterNo: '{{ old('meter_no', $editMeter->meter_no ?? '') }}',
+                
+                    updateMeterNo(event) {
+                        // Get the text inside the selected <option>
+                        const select = event.target;
+                        const selectedText = select.options[select.selectedIndex].getAttribute('data-unit-no');
+                
+                        if (selectedText) {
+                            // Set the format: 1053042152196-(UnitNo)
+                            this.meterNo = `1053042152196-${selectedText}`;
+                        } else {
+                            this.meterNo = '';
+                        }
+                    }
+                }">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium">Select Unit / Shop (Electricity Only)</label>
+                        <select class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="unit_id"
+                            @change="updateMeterNo($event)">
+                            <option value="">-- Choose a Unit --</option>
+                            @foreach ($units as $unit)
+                                @if ($unit->has_electricity)
+                                    <option data-unit-no="{{ $unit->unit_no }}" value="{{ $unit->id }}"
+                                        @selected(old('unit_id', $editMeter->unit_id ?? '') == $unit->id)>
+                                        {{ $unit->unit_no }} ({{ ucfirst($unit->type) }})
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                        @error('unit_id')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="">
+                        <label class="mb-1 block text-sm">Meter No</label>
+                        <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="meter_no" type="text"
+                            x-model="meterNo">
+                        @error('meter_no')
+                            <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
-                <!-- Meter No -->
-                <div>
-                    <label class="mb-1 block text-sm">Meter No</label>
-                    <input class="w-full rounded border px-3 py-2 dark:bg-gray-700" name="meter_no" type="text"
-                        value="{{ old('meter_no', $editMeter->meter_no ?? '') }}">
-                    @error('meter_no')
-                        <p class="mt-1 text-xs font-semibold text-red-500">{{ $message }}</p>
-                    @enderror
+
+                <div class="mt-4">
+                    <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                        {{ $editMeter ? 'Update Meter' : 'Save Meter' }}
+                    </button>
+
+                    @if ($editMeter)
+                        <a class="ml-3 text-sm text-gray-500" href="{{ route('meters.index') }}">
+                            Cancel
+                        </a>
+                    @endif
                 </div>
-
-            </div>
-
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    {{ $editMeter ? 'Update' : 'Save' }}
-                </button>
-
-                @if ($editMeter)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('meters.index') }}">
-                        Cancel
-                    </a>
-                @endif
             </div>
         </form>
     </div>
@@ -75,20 +92,63 @@
                 <thead>
                     <tr
                         class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500 dark:bg-gray-900/50 dark:text-gray-400">
-                        <th class="px-6 py-3 text-left font-semibold">ID</th>
-                        <th class="px-6 py-3 text-left font-semibold">Unit ID</th>
-                        <th class="px-6 py-3 text-left font-semibold">Meter No</th>
-                        <th class="px-6 py-3 text-right font-semibold">Action</th>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+                            scope="col">
+                            ID
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+                            scope="col">
+                            Unit No & Property
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+                            scope="col">
+                            Meter Number
+                        </th>
+
+                        <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500"
+                            scope="col">
+                            Actions
+                        </th>
+                    </tr>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse($meters as $meter)
                         <tr class="transition-colors duration-200 hover:bg-indigo-50/50 dark:hover:bg-gray-700/50">
-                            <td class="px-6 py-4 font-mono text-indigo-500 dark:text-indigo-400">#{{ $meter->id }}
+                            <td class="px-6 py-4 font-mono text-xs text-gray-400">
+                                #{{ $meter->id }}
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                {{ $meter->unit_id }}</td>
-                            <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $meter->meter_no }}</td>
+
+                            <td class="px-6 py-4">
+                                <div class="font-semibold text-gray-900 dark:text-white">
+                                    {{ $meter->unit->unit_no ?? 'N/A' }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $meter->unit->property->name ?? 'No Property' }}
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <div class="group flex items-center gap-2">
+                                    <span
+                                        class="font-mono text-sm text-gray-600 dark:text-gray-400">{{ $meter->meter_no }}</span>
+
+                                    <button
+                                        class="rounded p-1 opacity-0 transition-opacity hover:bg-gray-200 group-hover:opacity-100 dark:hover:bg-gray-700"
+                                        title="Copy Meter No"
+                                        onclick="navigator.clipboard.writeText('{{ $meter->meter_no }}')">
+                                        <svg class="h-3 w-3 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+
                             <td class="px-6 py-4 text-right">
                                 <a class="inline-flex items-center font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
                                     href="{{ route('meters.edit', $meter) }}">

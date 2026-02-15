@@ -18,7 +18,7 @@
 
                             <x-layouts.sidebar-link href="{{ route('meters.index') }}" icon='fas-bolt'
                                 :active="request()->routeIs('meters*')">
-                                Meter</x-layouts.sidebar-link>
+                                Meter (Shop only)</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-link href="{{ route('meter-readings.index') }}" icon='fas-calculator'
                                 :active="request()->routeIs('meter-readings*')">

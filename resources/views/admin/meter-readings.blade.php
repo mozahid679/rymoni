@@ -31,7 +31,7 @@
                 }
             }">
 
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-6">
                     {{-- Shop Selection --}}
                     <div>
                         <label class="mb-1 block text-sm font-medium">Shop</label>
@@ -97,24 +97,30 @@
                         @enderror
                     </div>
 
-                    {{-- Read-only Total Display --}}
-                    <div class="flex flex-col justify-end">
-                        <div class="rounded border border-indigo-500/20 bg-indigo-500/10 p-2">
-                            <p class="text-xs font-bold uppercase tracking-wider text-indigo-400">Estimated Total</p>
-                            <p class="font-mono text-xl text-white">$<span x-text="total"></span></p>
+                    <div class="flex gap-4">
+                        <div>
+                            <div class="w-full overflow-hidden">
+                                <div class="rounded border border-indigo-500/20 bg-indigo-500/10 p-2">
+                                    <p class="font-semibold tracking-wider text-indigo-400">Estimated
+                                        Total
+                                    </p>
+                                    <p class="font-mono text-white">৳<span x-text="total"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                                {{ $editReading ? 'Update' : 'Save' }}
+                            </button>
+
+                            @if ($editReading)
+                                <a class="ml-3 text-sm text-gray-500"
+                                    href="{{ route('meter-readings.index') }}">Cancel</a>
+                            @endif
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    {{ $editReading ? 'Update' : 'Save' }}
-                </button>
-
-                @if ($editReading)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('meter-readings.index') }}">Cancel</a>
-                @endif
             </div>
         </form>
     </div>

@@ -1,5 +1,5 @@
 <!-- Header -->
-<header class="z-20 border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+<header class="sticky top-0 z-40 border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
     <div class="flex h-16 items-center justify-between px-4">
         <!-- Left side: Logo and toggle -->
         <div class="flex items-center">

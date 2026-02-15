@@ -36,6 +36,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     ], ['only' => ['index', 'store', 'edit', 'update', 'destroy']]);
 });
 
+Route::get('/admin/properties/{property}/units', [PropertyController::class, 'getUnits']);
+
 Route::get('bills/{bill}/invoice', [BillController::class, 'invoice'])
     ->name('bills.invoice');
 

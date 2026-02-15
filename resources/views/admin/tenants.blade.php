@@ -17,7 +17,7 @@
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 
                 <!-- Name -->
                 <div>
@@ -52,17 +52,18 @@
                     @enderror
                 </div>
 
+
+                <div class="mt-5 flex items-center">
+                    <button class="rounded bg-indigo-600 px-6 py-2 text-white">
+                        {{ $editTenant ? 'Update Tenant' : 'Save Tenant' }}
+                    </button>
+
+                    @if ($editTenant)
+                        <a class="ml-3 text-sm text-gray-500" href="{{ route('tenants.index') }}">Cancel</a>
+                    @endif
+                </div>
             </div>
 
-            <div class="mt-4">
-                <button class="rounded bg-indigo-600 px-6 py-2 text-white">
-                    {{ $editTenant ? 'Update' : 'Save' }}
-                </button>
-
-                @if ($editTenant)
-                    <a class="ml-3 text-sm text-gray-500" href="{{ route('tenants.index') }}">Cancel</a>
-                @endif
-            </div>
         </form>
     </div>
 

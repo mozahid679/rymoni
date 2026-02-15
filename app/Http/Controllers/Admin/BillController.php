@@ -9,6 +9,7 @@ use App\Services\ElectricityCalculator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Artisan;
 
 class BillController extends Controller
 {
@@ -33,14 +34,6 @@ class BillController extends Controller
       ]);
    }
 
-   //    return view('admin.bills', [
-   //       'bills' => Bill::with(['tenant', 'unit'])->latest()->get(),
-   //       'tenancies' => Tenancy::with(['tenant', 'unit.property'])
-   //          ->whereNull('end_date')
-   //          ->get(),
-   //       'editBill' => null,
-   //    ]);
-   // }
    public function showGenerateForm()
    {
       return view('admin.bills-generate');
@@ -77,6 +70,20 @@ class BillController extends Controller
       return redirect()
          ->route('bills.index')
          ->with('success', 'Bill created successfully.');
+   }
+
+   public function runGenerate(Request $request)
+   {
+      $month = $request->input('month', now()->format('Y-m'));
+
+      Artisan::call('bills:generate', [
+         'month' => $month
+      ]);
+
+      $output = Artisan::output();
+
+      return redirect()->route('bills.index')
+         ->with('success', "Bills for {$month} generated successfully.")->with('output', $output);
    }
 
    public function invoice(Bill $bill)

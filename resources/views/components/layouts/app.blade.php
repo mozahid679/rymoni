@@ -59,12 +59,12 @@
         <x-layouts.app.header />
 
         <!-- Main Content Area -->
-        <div class="flex flex-1 overflow-hidden">
+        <div class="flex flex-1">
 
             <x-layouts.app.sidebar />
 
             <!-- Main Content -->
-            <main class="content-transition flex-1 overflow-auto bg-gray-100 dark:bg-gray-900">
+            <main class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900">
                 <div class="p-6">
 
 
